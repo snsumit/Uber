@@ -55,6 +55,10 @@ const CaptainSignup = () => {
       setLastName('')
       setEmail('')
       setPassword('')
+      setVehicleColor('')
+      setVehiclePlate('')
+      setVehicleCapacity('')
+      setVehicleType('')
    }
 
    return (
