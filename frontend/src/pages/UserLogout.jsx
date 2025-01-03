@@ -19,7 +19,7 @@ const UserLogout = () => {
             navigate('/login')
          }
      })
-     }) 
+   },[]) 
    
    
    
