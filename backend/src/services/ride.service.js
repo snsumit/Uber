@@ -1,5 +1,6 @@
 import { Ride } from "../models/ride.model.js";
 import mapsService from "./maps.service.js";
+import crypto from 'crypto';
 
 async function getfare(pickup, destination) {
    if(!pickup || !destination){
@@ -11,19 +12,19 @@ async function getfare(pickup, destination) {
     const baseFare = {
         auto: 30,
         car: 50,
-        motorcycle: 20,
+        moto: 20,
     }; // Base fare in currency units
 
     const perKmRate = {
         auto: 10,
         car: 15,
-        motorcycle: 8,
+        moto: 8,
     };
 
     const perMinuteRate = {
         auto: 2,
         car: 3,
-        motorcycle: 1.5,
+        moto: 1.5,
     };
 
     if (!distanceTime || !distanceTime.distance || !distanceTime.time) {
@@ -36,17 +37,24 @@ async function getfare(pickup, destination) {
     const fare = {
         auto: baseFare.auto + (distanceInKm * perKmRate.auto) + (timeInMinutes * perMinuteRate.auto),
         car: baseFare.car + (distanceInKm * perKmRate.car) + (timeInMinutes * perMinuteRate.car),
-        motorcycle: baseFare.motorcycle + (distanceInKm * perKmRate.motorcycle) + (timeInMinutes * perMinuteRate.motorcycle),
+        moto: baseFare.moto + (distanceInKm * perKmRate.moto) + (timeInMinutes * perMinuteRate.moto),
     };
 
     // Round fares to two decimal places for accuracy
     return {
         auto: parseFloat(fare.auto.toFixed(2)),
         car: parseFloat(fare.car.toFixed(2)),
-        motorcycle: parseFloat(fare.motorcycle.toFixed(2)),
+        moto: parseFloat(fare.moto.toFixed(2)),
     };
 };
 
+function generateOTP(length) {
+    if (!length || length <= 0) {
+        throw new Error('Length must be a positive number');
+    }
+    const otp = crypto.randomInt(0, Math.pow(10, length)).toString().padStart(length, '0');
+    return otp;
+}
 
 
 const createRide = async ({user,pickup,destination,vehicleType}) => {
@@ -57,16 +65,16 @@ const createRide = async ({user,pickup,destination,vehicleType}) => {
     const fare = await getfare(pickup, destination);
 
      
-    const ride = new Ride({
+    const ride = Ride.create({
         user,
         pickup,
         destination,
         fare: fare[vehicleType],
-        
+        otp: generateOTP(6),
     })
 
    return ride;
 }
 
-export default { createRide };
+export default { createRide ,getfare};
 

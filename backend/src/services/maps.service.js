@@ -74,24 +74,38 @@ const getDistanceAndTime = async (address1, address2) => {
         throw error;
     }
 };
-    const getAutoCompleteSuggestions = async (input) => {
+
+
+const getAutoCompleteSuggestions = async (input) => {
     const apiKey = process.env.GRAPHHOPPER_MAP_URL; // Replace with your GraphHopper API key
     const url = `https://graphhopper.com/api/1/geocode?q=${encodeURIComponent(input)}&key=${apiKey}`;
 
     try {
         const response = await axios.get(url);
+
         if (response.data.hits && response.data.hits.length > 0) {
-            return response.data.hits.map(hit => ({
-                name: hit.name,
-                country: hit.country,
-                state: hit.state,
-                city: hit.city,
-                street: hit.street,
-                housenumber: hit.housenumber,
-                postcode: hit.postcode,
-                latitude: hit.point.lat,
-                longitude: hit.point.lng
-            }));
+            // Map the hits to the desired format
+            return response.data.hits.map(hit => {
+                const houseNumber = hit.house_number || ''; // Check for house number if available
+                const street = hit.street || '';
+                const city = hit.name || '';
+                const state = hit.state || '';
+                const country = hit.country || '';
+
+                // Concatenate fields, filter empty values, and join them with commas
+                const formattedAddress = [
+                    houseNumber,
+                    street,
+                    city,
+                    state,
+                    country
+                ].filter(Boolean).join(', ');
+
+                return {
+                    name: formattedAddress, // Human-readable name
+                    raw: hit // Include raw hit data for further use if needed
+                };
+            });
         } else {
             throw new Error('No suggestions found for the given input.');
         }
@@ -100,6 +114,8 @@ const getDistanceAndTime = async (address1, address2) => {
         throw error;
     }
 };
+
+
 
 
 

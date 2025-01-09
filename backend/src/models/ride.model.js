@@ -9,7 +9,6 @@ const rideSchema = new mongoose.Schema({
     },
     captain:{
         type:mongoose.Schema.Types.ObjectId,
-        required:true,
         ref:'Captain'
     },
     pickup:{
@@ -44,7 +43,12 @@ const rideSchema = new mongoose.Schema({
     },
     signature:{
         type:String
-    }
+    },
+    otp:{
+        type:String,
+        select:false,
+        required:true
+    },
     
     
 })
