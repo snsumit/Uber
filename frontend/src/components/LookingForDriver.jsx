@@ -5,7 +5,7 @@ const LookingForDriver = ({vehicleType,image,pickup,destination,fare,setVehicleF
     <div>
        <h5 onClick={() => {
             setVehicleFound(false)
-            
+             
           }} className='text-center w-full absolute top-0 p-1 '><i className="text-2xl text-gray-200 ri-arrow-down-wide-fill"></i></h5>
           <h3 className='text-xl font-semibold mb-5 '>Looking for a Driver</h3>
           <div className='flex gap-2 justify-between items-center flex-col'>

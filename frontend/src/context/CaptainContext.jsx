@@ -5,9 +5,9 @@ export const CaptainDataContext = createContext();
 
 const CaptainContext = ({children}) => {
    const [captain,setCaptain] = useState(null)
-
+   const [hasFetchedCaptain, setHasFetchedCaptain] = useState(false);
   return (
-      <CaptainDataContext.Provider value={{captain,setCaptain}}>
+      <CaptainDataContext.Provider value={{captain,setCaptain,hasFetchedCaptain,setHasFetchedCaptain}}>
         {children}
       </CaptainDataContext.Provider>
 

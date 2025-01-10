@@ -10,10 +10,11 @@ export const userDataContext = createContext()
         lastname:'',
     }
   })
+  const [hasFetchedUser, setHasFetchedUser] = useState(false);
 
     return (
     <div>
-        <userDataContext.Provider value={{user ,setUser}}>
+        <userDataContext.Provider value={{user ,setUser,hasFetchedUser, setHasFetchedUser}}>
            {children}
         </userDataContext.Provider>
         

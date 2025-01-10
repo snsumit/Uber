@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
@@ -8,6 +8,8 @@ import VehiclePanel from '../components/VehiclePanel';
 import ConfirmRide from '../components/ConfirmRide';
 import LookingForDriver from '../components/LookingForDriver';
 import WaitingForDriver from '../components/WaitingForDriver';
+import { SocketContext } from '../context/SocketContext';
+import { userDataContext } from '../context/UserContext';
 
 
 const Home = () => {
@@ -29,7 +31,23 @@ const Home = () => {
   const [vehicleType, setVehicleType] = useState(null);
   const [image, setImage] = useState('');
   const vehicleFoundRef = useRef(null);
+  const [ride,setRide] = useState(null)
   const confirmRidePanelRef = useRef(null);
+  const {socket} = useContext(SocketContext)
+
+  const { user } = useContext(userDataContext)
+
+  useEffect(()=>{
+
+     socket.emit('join',{userType:'user',userId:user._id})
+  },[])
+
+  socket.on('ride-confirmed',(data)=>{
+    console.log(data) 
+    setRide(data)
+    setVehicleFound(false)
+    setWaitingForDriver(true)
+  })
 
 
   useGSAP(function () {
@@ -238,9 +256,7 @@ const Home = () => {
         }
       })
       console.log(response)
-
-
-   }
+    }
 
   return (
     <div className="h-screen relative">
@@ -306,7 +322,7 @@ const Home = () => {
           <LookingForDriver vehicleType={vehicleType} image={image} pickup={pickup} destination={destination} fare={fare}  setVehicleFound={setVehicleFound} />
         </div>
         <div ref={waitingForDriverRef} className='fixed bg-white z-10 w-full px-2 py-10'>
-          <WaitingForDriver setWaitingForDriver={setWaitingForDriver} />
+          <WaitingForDriver ride={ride} setWaitingForDriver={setWaitingForDriver} />
         </div>
       </div>
     </div>

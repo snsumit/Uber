@@ -14,16 +14,14 @@ const CaptainProtectedWrapper = ({children}) => {
         if(!token){
            navigate('/captain-login')
         }
-    },[token])
-
-    useEffect(()=>{
+  
          axios.get(`${import.meta.env.VITE_BASE_URL}/captain/profile`,{
             headers:{
                 Authorization:`Bearer ${token}`    
             }
          }).then((response)=>{
             if(response.status === 200){
-                setCaptain(response.data.captain)
+                setCaptain(response.data)
                 setIsLoading(false)
             }
          }).catch((error)=>{
