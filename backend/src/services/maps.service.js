@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import { Captain } from '../models/captain.model.js';
 
 const getAddressCoordinates = async (query) => {
     const apiKey = process.env.GRAPHHOPPER_MAP_URL; // Replace with your GraphHopper API key
@@ -115,9 +115,27 @@ const getAutoCompleteSuggestions = async (input) => {
     }
 };
 
+const getCaptainsInTheRadius = async (ltd, lng, radius) => {
+   
+    //  radius in km
+    try {
+        const captains = await Captain.find({
+            location: {
+                $geoWithin: {
+                    $centerSphere: [[ltd, lng], radius / 6371]
+                }
+            }
+        });
+
+        return captains;
+    } catch (error) {
+        console.error('Error fetching captains:', error);
+        throw error;
+    }
+}
 
 
 
 
 
-export default {getAddressCoordinates,getDistanceAndTime,getAutoCompleteSuggestions};
+export default {getAddressCoordinates,getDistanceAndTime,getAutoCompleteSuggestions,getCaptainsInTheRadius};
