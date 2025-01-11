@@ -10,6 +10,8 @@ import LookingForDriver from '../components/LookingForDriver';
 import WaitingForDriver from '../components/WaitingForDriver';
 import { SocketContext } from '../context/SocketContext';
 import { userDataContext } from '../context/UserContext';
+import { useNavigate } from 'react-router-dom';
+import LiveTracking from '../components/LiveTracking';
 
 
 const Home = () => {
@@ -34,20 +36,28 @@ const Home = () => {
   const [ride,setRide] = useState(null)
   const confirmRidePanelRef = useRef(null);
   const {socket} = useContext(SocketContext)
+  const navigate = useNavigate()
 
   const { user } = useContext(userDataContext)
 
   useEffect(()=>{
 
      socket.emit('join',{userType:'user',userId:user._id})
-  },[])
+    
+     socket.on('ride-confirmed',(data)=>{
+      console.log(data) 
+      setRide(data)
+      setVehicleFound(false)
+      setWaitingForDriver(true)
+    })
 
-  socket.on('ride-confirmed',(data)=>{
-    console.log(data) 
-    setRide(data)
-    setVehicleFound(false)
-    setWaitingForDriver(true)
-  })
+    socket.on('ride-started',(data)=>{
+        setWaitingForDriver(false)
+        navigate('/riding',{state:{ride:data}})
+    })
+
+   
+  },[socket, navigate])
 
 
   useGSAP(function () {
@@ -260,12 +270,13 @@ const Home = () => {
 
   return (
     <div className="h-screen relative">
-      <img className="w-16 absolute left-5 top-5" src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt="" />
-      <div className="h-screen w-full">
-        <img className="h-full w-full object-cover" src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif" alt="" />
+      <img className="w-16 absolute left-16 top-5" src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt="" />
+      <div className="h-screen  z-0  w-full absolute top-0">
+        <LiveTracking  ride={ride} />
+
       </div>
-      <div className="w-full absolute flex flex-col h-screen top-0 justify-end">
-        <div className="bg-white h-[35%] relative p-5">
+      <div className="w-full absolute flex flex-col z-10 h-screen top-0 justify-end">
+        <div className="bg-white z-10 h-[35%] relative p-5 ">
           <h4
             ref={panelCloseRef}
             onClick={() => setPanelOpen(false)}

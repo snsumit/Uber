@@ -3,11 +3,15 @@ import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import FinishRide from '../components/FinishRide'
-
+import {useLocation } from 'react-router-dom'
+import LiveTracking from '../components/LiveTracking'
 
 const CaptainRiding = () => {
   const [finishRidePopupPanel,setFinishRidePopupPanel]= useState(false) 
   const finishRidePopupPanelRef = useRef(null) 
+
+  const location = useLocation()
+  const ride = location.state?.ride
 
   useGSAP(function () {
     if (finishRidePopupPanel) {
@@ -30,8 +34,8 @@ const CaptainRiding = () => {
       </Link>
     </div>
 
-    <div className='h-4/5 '>
-      <img className='h-full w-full object-cover' src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif" alt="" />
+    <div className=' h-4/5  z-0 relative '>
+       <LiveTracking ride={ride} />
     </div>
     <div className='h-1/5 p-8 flex justify-between items-center relative bg-yellow-400 'onClick={()=>{
         setFinishRidePopupPanel(true)
@@ -41,7 +45,7 @@ const CaptainRiding = () => {
        <button className='bg-green-600 p-2 px-10 text-white font-semibold rounded-lg' >Complete Ride</button>
     </div>
     <div ref={finishRidePopupPanelRef} className='fixed bg-white  bottom-0 z-10 w-full px-2 py-10 translate-y-full '>
-        <FinishRide setFinishRidePopupPanel={setFinishRidePopupPanel} />
+        <FinishRide ride={ride} setFinishRidePopupPanel={setFinishRidePopupPanel} />
      </div>
     
   </div>

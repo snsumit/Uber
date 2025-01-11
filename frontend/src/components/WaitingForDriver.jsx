@@ -14,6 +14,7 @@ const WaitingForDriver = ({ride,setWaitingForDriver}) => {
                 <h2 className='text-lg font-medium -mb-1'>{ride?.captain?.fullName?.firstname + " " + ride?.captain?.fullName?.lastname }</h2>
                 <h4 className='text-xl font-semibold'>{ride?.captain?.vehicle?.plate }</h4>
                 <p className='text-sm text-gray-600'>Maruti Suzuki Alto</p>
+                <h5 className='text-sm tex-gray-600'>{ride?.otp}</h5>
             </div>
            </div>
 

@@ -8,6 +8,7 @@ import ConfirmRidePopUp from '../components/ConfirmRidePopUp'
 import { SocketContext } from '../context/SocketContext'
 import { CaptainDataContext } from '../context/CaptainContext'
 import axios from 'axios'
+import LiveTracking from '../components/LiveTracking'
 
 const CaptainHome = () => {
   const [ridePopupPanel,setRidePopupPanel] = useState(false)
@@ -85,25 +86,25 @@ const CaptainHome = () => {
     }
   }, [confirmRidePopupPanel])
   return (
-    <div className='h-screen'>
-      <div className='fixed p-3 top-0 flex w-screen items-center justify-between '>
-        <img className='w-16' src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt="" />
+    <div className='relative h-screen'>
+      <div className='fixed p-3  top-0 flex w-screen items-center justify-between '>
+        <img className='w-16 ' src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt="" />
         <Link to='/home' className=' h-10 w-10  bg-white items-center flex justify-center rounded-full'>
           <i className="text-lg ri-logout-circle-r-line"></i>
         </Link>
       </div>
 
-      <div className='h-3/5 '>
-        <img className='h-full w-full object-cover' src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif" alt="" />
+      <div className='h-3/5 overflow-hidden relative z-0 '>
+        <LiveTracking  ride={ride} />
       </div>
-      <div className='h-2/5 p-6'>
+      <div className='h-2/5 p-6 z-20'>
         <CaptainDetails />
       </div>
-      <div ref={ridePopupPanelRef} className='fixed bg-white bottom-0 z-10 w-full px-2 py-10 translate-y-full '>
+      <div ref={ridePopupPanelRef}   className='fixed  bg-white   bottom-0 z-30 w-full px-2 py-10 translate-y-full '>
         <RidePopUp confirmRide={confirmRide} ride={ride} setRidePopupPanel={setRidePopupPanel} setConfirmRidePopupPanel={setConfirmRidePopupPanel}  />
       </div>
-      <div ref={confirmRidePopupPanelRef} className='fixed bg-white h-screen bottom-0 z-10 w-full px-2 py-10 translate-y-full '>
-        <ConfirmRidePopUp setConfirmRidePopupPanel={setConfirmRidePopupPanel} setRidePopupPanel={setRidePopupPanel}  />
+      <div ref={confirmRidePopupPanelRef} className='fixed bg-white h-screen bottom-0 z-30 w-full px-2 py-10 translate-y-full '>
+        <ConfirmRidePopUp ride={ride} setConfirmRidePopupPanel={setConfirmRidePopupPanel} setRidePopupPanel={setRidePopupPanel}  />
       </div>
     </div>
   )
